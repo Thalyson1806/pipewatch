@@ -6,15 +6,15 @@ Painel em tempo real para eventos do Pipefy. Cada vez que um card é movido, cri
 
 **Painel principal** — eventos chegando via SSE com contadores por tipo de ação. O indicador no canto superior direito mostra o status da conexão em tempo real.
 
-![Painel com eventos em tempo real](docs/dashboard-eventos.png)
+![Painel com eventos em tempo real](docs/screenshot/dashboard-eventos.png)
 
 **Formulário de teste** — dispara eventos diretamente pela interface, sem precisar de curl ou de uma conta no Pipefy. Útil para demonstrações e desenvolvimento local.
 
-![Formulário para envio de evento de teste](docs/eventos-teste.png)
+![Formulário para envio de evento de teste](docs/screenshot/eventos-teste.png)
 
 **Filtro por ação** — filtra a lista por tipo de evento (`card.move`, `card.create`, etc.) sem recarregar a página. O filtro também se aplica aos eventos que chegam via SSE enquanto a conexão está aberta.
 
-![Lista filtrada por tipo de ação](docs/filtro.png)
+![Lista filtrada por tipo de ação](docs/screenshot/filtro.png)
 
 ## Arquitetura
 
