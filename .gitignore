@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Env
+.env
+.env.local
+
+# Node
+node_modules/
+dist/
+.cache/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Migrations (geradas pelo Flask-Migrate, não commitar o banco local)
+backend/migrations/versions/*.pyc

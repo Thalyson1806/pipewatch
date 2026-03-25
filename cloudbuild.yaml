@@ -1,0 +1,62 @@
+steps:
+  # --- Backend ---
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - build
+      - -t
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/backend:$SHORT_SHA"
+      - ./backend
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - push
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/backend:$SHORT_SHA"
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - pipewatch-backend
+      - --image=$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/backend:$SHORT_SHA
+      - --region=$_REGION
+      - --platform=managed
+      - --allow-unauthenticated
+      - --set-secrets=DATABASE_URL=pipewatch-db-url:latest,PIPEFY_WEBHOOK_SECRET=pipefy-webhook-secret:latest,SECRET_KEY=pipewatch-secret-key:latest
+      - --min-instances=0
+      - --max-instances=3
+
+  # --- Frontend ---
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - build
+      - -t
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/frontend:$SHORT_SHA"
+      - ./frontend
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - push
+      - "$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/frontend:$SHORT_SHA"
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - pipewatch-frontend
+      - --image=$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/frontend:$SHORT_SHA
+      - --region=$_REGION
+      - --platform=managed
+      - --allow-unauthenticated
+      - --set-env-vars=BACKEND_URL=$_BACKEND_URL
+      - --min-instances=0
+      - --max-instances=2
+
+substitutions:
+  _REGION: us-central1
+  _BACKEND_URL: https://pipewatch-backend-xxxx-uc.a.run.app  # atualizar após primeiro deploy
+
+images:
+  - "$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/backend:$SHORT_SHA"
+  - "$_REGION-docker.pkg.dev/$PROJECT_ID/pipewatch/frontend:$SHORT_SHA"
